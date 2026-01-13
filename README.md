@@ -81,7 +81,6 @@ The following options can be configured:
 | `Leverage Ahead-Of-Time Cache` | The server ships with a pre-trained AOT cache (HytaleServer.aot) that improves boot times by skipping JIT warmup | `true` |
 | `Disable Sentry Crash Reporting` | Disable Sentry during active plugin development. Hytale uses Sentry to track crashes. Disable it to avoid submitting your development errors | `true` |
 | `Enable Backups` | Enable automatic backups | `false` |
-| `Backup Directory` | Directory where backups are saved | `/backup` |
 | `Backup Frequency` | Backup interval in minutes | `30` |
 | `Patchline` | What release channel you want to use | `release` |
 
