@@ -73,9 +73,34 @@ fi
 # Run automatic update if enabled
 if [ "${AUTOMATIC_UPDATE}" = "1" ]; then
     echo "Starting Hytale downloader..."
-    $DOWNLOADER -check-update
-    $DOWNLOADER -patchline $PATCHLINE -download-path server.zip
-    extract_server_files
+
+    # Read local version from file
+    if [ -f "version.txt" ]; then
+        LOCAL_VERSION=$(cat version.txt)
+    else
+        echo "version.txt not found, forcing update"
+        LOCAL_VERSION=""
+    fi
+
+    # Get remote/downloader version
+    DOWNLOADER_VERSION=$($DOWNLOADER -print-version)
+
+    echo "Local version: $LOCAL_VERSION"
+    echo "Downloader version: $DOWNLOADER_VERSION"
+
+    # Compare versions
+    if [ "$LOCAL_VERSION" != "$DOWNLOADER_VERSION" ]; then
+        echo "Version mismatch, running update..."
+
+        $DOWNLOADER -check-update
+        $DOWNLOADER -patchline $PATCHLINE -download-path server.zip
+        extract_server_files
+
+        # Update version.txt after successful update
+        echo "$DOWNLOADER_VERSION" > version.txt
+    else
+        echo "Versions match, skipping update"
+    fi
 fi
 
 # Check if server files were downloaded correctly
