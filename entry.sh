@@ -71,6 +71,16 @@ check_cached_tokens() {
             return 1
         fi
 
+		# Check if required keys exist
+        REFRESH_TOKEN_EXISTS=$(jq -r 'has("refresh_token")' "$AUTH_CACHE_FILE")
+        PROFILE_UUID_EXISTS=$(jq -r 'has("profile_uuid")' "$AUTH_CACHE_FILE")
+
+        if [ "$REFRESH_TOKEN_EXISTS" != "true" ] || [ "$PROFILE_UUID_EXISTS" != "true" ]; then
+            echo "Warning: Cached token file missing required keys, removing..."
+            rm "$AUTH_CACHE_FILE"
+            return 1
+        fi
+
         echo "✓ Found cached authentication tokens"
         return 0
     fi
