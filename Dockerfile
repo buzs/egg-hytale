@@ -1,43 +1,31 @@
-#
-# Copyright (c) 2026 Pterodactyl
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
-#
-
-FROM --platform=$TARGETOS/$TARGETARCH ghcr.io/pterodactyl/yolks:java_25
+FROM --platform=$TARGETOS/$TARGETARCH ghcr.io/parkervcp/yolks:java_25
 
 LABEL author="NATroutter" maintainer="contact@natroutter.fi"
-LABEL org.opencontainers.image.source="https://github.com/pterodactyl/yolks"
+LABEL org.opencontainers.image.source="https://github.com/NATroutter/egg-hytale"
+LABEL org.opencontainers.image.description="Container for running hytale game servers"
 LABEL org.opencontainers.image.licenses=MIT
 
+# Work as root for setup
 USER root
 
-COPY --from=ghcr.io/pterodactyl/yolks:java_25 entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+# Copy Pterodactyl entrypoint
+COPY --from=ghcr.io/parkervcp/yolks:java_25 --chmod=755 /entrypoint.sh /entrypoint.sh
 
+# Install dependencies
 RUN apt update -y && apt install -y unzip jq curl && rm -rf /var/lib/apt/lists/*
 
+# Copy entry.sh as root-owned (so container user can't modify it)
+COPY --chmod=755 ./entry.sh /entry.sh
+RUN sed -i 's/\r$//' /entry.sh
+
+# Copy start.sh to /usr/local/bin (protected location, won't be overridden by volume mounts)
+COPY --chmod=755 ./start.sh /usr/local/bin/start.sh
+RUN sed -i 's/\r$//' /usr/local/bin/start.sh
+
+# Switch to container user ONLY for runtime
 USER container
 ENV USER=container HOME=/home/container
 WORKDIR /home/container
 
-COPY ./start.sh /start.sh
-
-ENTRYPOINT [ "/bin/bash", "/start.sh"]
-CMD ["/bin/bash", "/entrypoint.sh"]
+#Start the container
+CMD ["/bin/bash", "/entry.sh"]
