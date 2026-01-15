@@ -1,4 +1,4 @@
-FROM --platform=$TARGETOS/$TARGETARCH ghcr.io/parkervcp/yolks:java_25
+FROM --platform=$TARGETOS/$TARGETARCH ghcr.io/pterodactyl/yolks:java_25
 
 LABEL author="NATroutter" maintainer="contact@natroutter.fi"
 LABEL org.opencontainers.image.source="https://github.com/NATroutter/egg-hytale"
@@ -9,7 +9,7 @@ LABEL org.opencontainers.image.licenses=MIT
 USER root
 
 # Copy Pterodactyl entrypoint
-COPY --from=ghcr.io/parkervcp/yolks:java_25 --chmod=755 /entrypoint.sh /entrypoint.sh
+COPY --from=ghcr.io/pterodactyl/yolks:java_25 --chmod=755 /entrypoint.sh /entrypoint.sh
 
 # Install dependencies
 RUN apt update -y && apt install -y unzip jq curl && rm -rf /var/lib/apt/lists/*
