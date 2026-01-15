@@ -2,17 +2,17 @@
     "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PTERODACTYL PANEL - PTERODACTYL.IO",
     "meta": {
         "version": "PTDL_v2",
-        "update_url": "https:\/\/raw.githubusercontent.com\/NATroutter\/egg-hytale\/refs\/heads\/main\/egg-hytale.pterodactyl.json"
+        "update_url": "https:\/\/raw.githubusercontent.com\/buzs\/egg-hytale\/refs\/heads\/main\/egg-hytale.pterodactyl.json"
     },
     "exported_at": "2026-01-14T23:02:09+02:00",
     "name": "Hytale",
-    "author": "contact@natroutter.fi",
+    "author": "me@buzs.dev",
     "description": "Hytale is a block-based sandbox game that blends creative building with RPG adventure. Explore procedurally generated worlds filled with unique biomes, dungeons, and creatures. Build anything from simple homes to grand castles, craft items, and battle monsters. Create custom content with built-in modding tools, host your own servers, and shape the experience with plugins and mods. Play solo or with friends in a world designed for both creation and exploration.\r\n\r\nCredits:\r\n- Made by NATroutter\r\n- https:\/\/natroutter.fi\r\n- https:\/\/github.com\/NATroutter",
     "features": [
         "java_version"
     ],
     "docker_images": {
-        "Hytale": "ghcr.io\/natroutter\/egg-hytale:latest"
+        "Hytale": "ghcr.io\/buzs\/egg-hytale:latest"
     },
     "file_denylist": [],
     "startup": ".\/start.sh",
@@ -88,6 +88,26 @@
             "user_viewable": true,
             "user_editable": true,
             "rules": "required|integer|min:1",
+            "field_type": "text"
+        },
+        {
+            "name": "Install SourceQuery Plugin",
+            "description": "Install the hytale-sourcequery plugin to enable SourceQuery support.",
+            "env_variable": "INSTALL_SOURCEQUERY_PLUGIN",
+            "default_value": "0",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|boolean",
+            "field_type": "text"
+        },
+        {
+            "name": "Automatic SourceQuery Update",
+            "description": "Automatically update the hytale-sourcequery plugin when a new version is available.",
+            "env_variable": "AUTO_UPDATE_SOURCEQUERY",
+            "default_value": "1",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|boolean",
             "field_type": "text"
         },
         {
