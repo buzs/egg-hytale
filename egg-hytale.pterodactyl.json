@@ -111,6 +111,16 @@
             "field_type": "text"
         },
         {
+            "name": "Source Query Port",
+            "description": "The port that the Source Query plugin will use to respond to A2S requests. This should be different from the main server port. Defaults to the game port + 1.",
+            "env_variable": "QUERY_PORT",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|integer|between:1,65535",
+            "field_type": "text"
+        },
+        {
             "name": "Disable Sentry Crash Reporting",
             "description": "Important: Disable Sentry during active plugin development.\r\n\r\nHytale use Sentry to track crashes. Disable it to avoid submitting your development errors",
             "env_variable": "DISABLE_SENTRY",
