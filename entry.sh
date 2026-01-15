@@ -435,7 +435,7 @@ fi
 # Check if mods path exist
 if [ ! -d "mods" ]; then
 	echo "Mods directory not found, creating..."
-	mkdir -p "$MODS_DIR"
+	mkdir -p "mods"
 
 	if [ $? -ne 0 ]; then
 		echo "⨯ Failed to create mods directory. Check permissions."
