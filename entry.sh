@@ -432,6 +432,61 @@ if [ ! -f "HytaleServer.jar" ]; then
     exit 1
 fi
 
+# Check if mods path exist
+if [ ! -d "mods" ]; then
+	echo "Mods directory not found, creating..."
+	mkdir -p "$MODS_DIR"
+
+	if [ $? -ne 0 ]; then
+		echo "⨯ Failed to create mods directory. Check permissions."
+		exit 1
+	fi
+fi
+
+
+if [ "${INSTALL_SOURCEQUERY_PLUGIN}" = "1" ]; then
+    echo "Preparing hytale-sourcequery plugin..."
+    PLUGIN_PATH="mods/hytale-sourcequery.jar"
+    
+    # Fetch latest release URL
+    LATEST_URL=$(curl -sSL https://api.github.com/repos/physgun-com/hytale-sourcequery/releases/latest \
+        | grep -oP '"browser_download_url":\s*"\K[^"]+\.jar' || true)
+
+    if [ -z "$LATEST_URL" ]; then
+        echo "⚠ Could not fetch latest hytale-sourcequery release."
+    else
+        if [ -f "$PLUGIN_PATH" ]; then
+            echo "✓ hytale-sourcequery already installed."
+
+            if [ "${AUTO_UPDATE_SOURCEQUERY}" = "1" ]; then
+                echo "Checking for plugin updates..."
+
+                curl -sSL -o /tmp/hytale-sourcequery.jar "$LATEST_URL"
+
+                if ! cmp -s /tmp/hytale-sourcequery.jar "$PLUGIN_PATH"; then
+                    mv /tmp/hytale-sourcequery.jar "$PLUGIN_PATH"
+                    echo "✓ hytale-sourcequery plugin updated!"
+                else
+                    echo "✓ Plugin already up to date."
+                    rm -f /tmp/hytale-sourcequery.jar
+                fi
+            else
+                echo "Skipping plugin update (AUTO_UPDATE_SOURCEQUERY disabled)."
+            fi
+        else
+            echo "Plugin not found, downloading..."
+
+            curl -sSL -o "$PLUGIN_PATH" "$LATEST_URL"
+
+            if [ $? -eq 0 ]; then
+                echo "✓ hytale-sourcequery plugin installed!"
+            else
+                echo "⚠ Failed to download hytale-sourcequery plugin."
+            fi
+        fi
+    fi
+fi
+
 # Check for cached authentication tokens
 if check_cached_tokens && load_cached_tokens; then
     echo "Using cached authentication..."
